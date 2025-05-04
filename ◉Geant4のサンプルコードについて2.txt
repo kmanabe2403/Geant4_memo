@@ -1,0 +1,64 @@
+◉Geant4のサンプルコードについて2
+Geant4のサンプル B1 は、最小限の構成で放射線シミュレーションの基本構造を学ぶための入門用プログラム。
+
+◉B1サンプルの全体像
+このプログラムは、以下の流れを実現しています：
+世界（ワールド）を作る
+検出器（detector）を作る
+粒子を発射する
+粒子の通過・反応を追跡（track）する
+可視化する
+マクロでコマンド操作もできる
+
+◉フォルダ構成とファイルの役割
+① build/（ビルド生成物）
+exampleB1：実行ファイル（プログラム本体）
+Makefile, CMakeFiles/, .in, .out：ビルド関連の自動生成ファイル
+run1.mac, run2.mac, vis.mac, init_vis.mac, G4History.macro：マクロファイル（後述）
+
+② include/（ヘッダーファイル）
+.hh ファイルたち：クラスの定義（どんな機能を持つか）が書かれています。各 .cc に対応。
+DetectorConstruction.hh　　検出器（物理的な構造）を定義
+PrimaryGeneratorAction.hh　　粒子の種類・位置・運動エネルギーなどを定義
+ActionInitialization.hh　　すべてのアクションの初期化設定
+EventAction.hh　　イベントごとの処理（例：1粒子衝突）
+RunAction.hh　　ラン（複数イベント）の処理
+SteppingAction.hh　　粒子の「ステップ」ごとの処理（非常に細かい動作）
+
+③ src/（ソースファイル）
+.cc ファイルたち：実際の中身・処理の実装が書かれています。
+ファイル名は include/ と対応。
+
+④ その他のファイル（ルート）
+exampleB1.cc　　main関数がある。プログラムの入り口。
+CMakeLists.txt　　CMakeの設定ファイル（どのファイルをビルドするかなど）
+README, .README.txt, History　　説明用ファイル
+run1.mac, run2.mac, vis.mac, init_vis.mac　　マクロファイル：実行時の設定を自動化できる
+
+
+◉ B1は何をしているのか？
+以下のような単純な「放射線シミュレーション」を行っています：
+シミュレーション内容：
+粒子ビーム（デフォルトで電子かγ線）を
+一枚の四角い検出器（Box）に向かって撃ちこみ
+それがどのように通過／反応するかを見る
+これは、放射線実験でよくある「入射粒子が検出器をどう通るか」を調べるための基本構成です。
+
+
+◉マクロファイルとは？
+マクロファイルは、プログラム実行中に設定を記述しておけるスクリプトです。
+例えば：
+/run/initialize
+/vis/open OGL
+/vis/drawVolume
+/vis/viewer/set/viewpointThetaPhi 90 0
+/run/beamOn 10
+→ 実行時にこのマクロを読み込むと、視点を設定して粒子を10個撃つなど、毎回手で打たなくてもOKになります。
+
+
+◉まとめ
+main()　　プログラムのスタート地点。exampleB1.cc にある
+DetectorConstruction　　シミュレーションの物理空間（検出器）を定義
+PrimaryGeneratorAction　　入射粒子の種類・エネルギーを定義
+*Action系クラス	　　イベント処理の各段階を細かく制御
+マクロファイル　　実行中の設定をスクリプトで制御できる
