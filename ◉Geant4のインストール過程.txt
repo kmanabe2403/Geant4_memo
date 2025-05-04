@@ -1,0 +1,64 @@
+◉Geant4のインストール過程その2
+https://chatgpt.com/c/6815a314-7fdc-8008-9ea5-931e08852c98
+23:30~24:00で、makeが終わった
+
+sudo apt update
+sudo apt install -y build-essential cmake g++ qtbase5-dev libx11-dev libxmu-dev libxi-dev libglu1-mesa-dev libgl1-mesa-dev libexpat1-dev
+sudo apt install libxerces-c-dev
+cd ~
+wget https://cern.ch/geant4/support/source/g4source/11.3.2/geant4-11.3.2.tar.gz
+(ここ404エラーが出て、手動で"C:\Users\kmana\geant4-v11.3.2.tar.gz"にダウンロードした)
+tar -xvzf geant4-v11.3.2.tar.gz
+tar -xvzf /mnt/c/Users/kmana/geant4-v11.3.2.tar.gz
+cd ~/geant4-v11.3.2
+ls
+
+cmake .. \
+  -DCMAKE_INSTALL_PREFIX=~/geant4-install \
+  -DGEANT4_USE_OPENGL_X11=ON \
+  -DGEANT4_USE_QT=ON \
+  -DGEANT4_USE_XM=OFF \
+  -DGEANT4_USE_GDML=ON \
+  -DGEANT4_INSTALL_DATA=ON
+make -j$(nproc)
+make install
+
+echo 'source /home/kmanabe2403/geant4-install/bin/geant4.sh' >> ~/.bashrc
+source /home/kmanabe2403/geant4-install/bin/geant4.sh
+geant4-config --version
+
+cat /usr/local/bin/geant4
+sudo rm /usr/local/bin/geant4
+
+
+
+
+
+◉サンプルコードの実行
+source /home/kmanabe2403/geant4-install/bin/geant4.sh
+cd ~
+cp -r ~/geant4-v11.3.2/examples/basic/B1 ~/
+cd ~/B1
+mkdir build
+cd build
+cmake ..  # geant4.sh を source 済みであることが必要
+make -j$(nproc)
+./exampleB1
+
+
+
+
+◉VScodeでのサンプルコードの読み込み、実行
+source ~/geant4-install/bin/geant4.sh
+cp -r ~/geant4-v11.3.2/examples/basic/B1 ~/
+cd ~/B1
+mkdir build
+cd build
+cmake ..
+make -j$(nproc)
+./exampleB1
+
+Sessionみたいなところで使える
+/run/beamOn 10
+/vis/viewer/set/viewpointThetaPhi 90 0
+/control/execute vis.mac

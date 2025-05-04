@@ -1,0 +1,72 @@
+Geant4のインストール過程:
+13:30頃開始
+◉step1: 必要なパッケージをインストール
+Ubuntuで、
+sudo apt update
+sudo apt install -y build-essential cmake g++ qtbase5-dev libx11-dev libxmu-dev libxi-dev libglu1-mesa-dev libgl1-mesa-dev libexpat1-dev
+sudo apt install libxerces-c-dev
+を実行する
+
+
+◉step2: Geant4 11.3.2のソースコードのダウンロード
+https://geant4.web.cern.ch/download/11.3.2.htmlに行き、Source codeのDownload tar.gzをクリックする
+(wget https://geant4.web.cern.ch/sites/default/files/geant4/geant4.11.3.2.tar.gz
+ではなぜか404not foundのエラーが出た)
+これを、"C:\Users\kmana\"に移動させ、Ubuntuで、	(ここじゃなくて、~$にコピーしてやればよかった...)
+tar -xvzf /mnt/c/Users/kmana/geant4-v11.3.2.tar.gz -C /mnt/c/Users/kmana/
+で解凍する
+
+cd /mnt/c/Users/kmana/
+cd geant4-v11.3.2
+
+
+◉step3: ビルドディレクトリの作成と、CMakeでビルド構成
+mkdir build
+cd build
+
+kmanabe2403は、自分のWSLユーザー名にして、Ubuntuで以下のコマンドを実行
+ちょっと時間がかかるけど待つ
+cmake .. \
+  -DCMAKE_INSTALL_PREFIX=/home/kmanabe2403/geant4-install \
+  -DGEANT4_USE_OPENGL_X11=ON \
+  -DGEANT4_USE_QT=ON \
+  -DGEANT4_USE_XM=OFF \
+  -DGEANT4_USE_GDML=ON \
+  -DGEANT4_INSTALL_DATA=ON
+
+
+以下の表示が出たら終わり。
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /mnt/c/Users/kmana/geant4-v11.3.2/build
+
+引き続きUbuntuで以下のコマンドを実行。6は、自分のPCのコア数-2の値。
+(私のPCはコア数8。自分のPCのコア数と同じか、それより1~2小さい値がいいらしい)
+make -j6
+
+めっっっっちゃ時間かかるけど、おとなしく待つ
+14:00開始
+17:00で48%くらい（それはたぶん、無線だったせい。有線推奨）
+21:30で95%
+22:16に終了
+
+sudo make install
+けっこう時間がかかるけど待つ(22:16~23:00頃)
+とんでもない量のインストールがされる
+(見てるとちょっとおもしろい)
+
+
+◉step4: 環境変数の設定
+Geant4の環境設定スクリプトを読み込むようにする
+cd ~
+echo 'source /mnt/c/Users/kmana/geant4-v11.3.2/bin/geant4.sh' >> ~/.bashrc
+source ~/.bashrc
+なんかパスが違った
+あれこれしてもうまくいかない
+◉step5: 確認
+geant4-config --version
+geant4
+
+
+◉step6: VScodeでの環境設定
+
