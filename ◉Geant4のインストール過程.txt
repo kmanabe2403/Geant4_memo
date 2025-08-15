@@ -47,7 +47,11 @@ make -j$(nproc)
 
 
 B2とかは、B2aとかに移動してからやる
-
+マクロファイルは、./exampleB1 ../run1.macみたいな感じで実行するときに使える(バッチモード)
+/control/execute ../run1.mac
+とすると、beanOnとかと同じところで使える(インタラクティブモード)
+macroファイルをインタラクティブモードでてきとーに実行するとめっちゃ粒子打ち込まれて爆発するかもしれない
+(よく読むように)
 
 
 ◉VScodeでのサンプルコードの読み込み、実行
@@ -64,4 +68,5 @@ Sessionみたいなところで使える
 /run/beamOn 10
 /vis/viewer/set/viewpointThetaPhi 90 0
 /control/execute vis.mac
+
 
